@@ -1,22 +1,30 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:14:///test_db  # Testcontainers JDBC URL
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:postgresql://localhost:5432/ms_client_test?currentSchema=ms_client_schema
     username: postgres
-    password: postgres
+    password: Boxing2003
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        jdbc:
+          time_zone: UTC
+        default_schema: ms_client_schema
+
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db/changelog-master.yaml
+    default-schema: ms_client_schema
 
 logging:
   level:
     root: INFO
     org.springframework: WARN
-    com.example: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

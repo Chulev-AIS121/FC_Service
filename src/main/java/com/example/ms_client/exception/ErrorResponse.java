@@ -1,7 +1,12 @@
 package com.example.ms_client.exception;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ErrorResponse {
+    @JsonProperty("error")
     private String error;
+
+    @JsonProperty("message")
     private String message;
 
     public ErrorResponse(String error, String message) {

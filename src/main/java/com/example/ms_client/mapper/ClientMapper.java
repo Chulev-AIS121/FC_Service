@@ -34,4 +34,3 @@ public interface ClientMapper {
         return dateTimeStr != null ? LocalDateTime.parse(dateTimeStr, FORMATTER) : null;
     }
 }
-

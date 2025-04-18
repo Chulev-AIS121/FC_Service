@@ -5,7 +5,9 @@ import java.util.UUID;
 public class ClientDTO {
 
     private UUID id;
-    private String name;
+    private String fullName;
+    private String shortName;
+    private String inn;
     private boolean active;
     private String createDateTime;
     private String updateDateTime;
@@ -13,9 +15,12 @@ public class ClientDTO {
 
     public ClientDTO() {}
 
-    public ClientDTO(UUID id, String name, boolean active, String createDateTime, String updateDateTime, String clientType) {
+    public ClientDTO(UUID id, String fullName, String shortName, String inn,
+                     boolean active, String createDateTime, String updateDateTime, String clientType) {
         this.id = id;
-        this.name = name;
+        this.fullName = fullName;
+        this.shortName = shortName;
+        this.inn = inn;
         this.active = active;
         this.createDateTime = createDateTime;
         this.updateDateTime = updateDateTime;
@@ -30,12 +35,28 @@ public class ClientDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getInn() {
+        return inn;
+    }
+
+    public void setInn(String inn) {
+        this.inn = inn;
     }
 
     public boolean isActive() {
@@ -62,11 +83,8 @@ public class ClientDTO {
         this.updateDateTime = updateDateTime;
     }
 
-    public String getClientType() {
-        return clientType;
-    }
+    public String getClientType() { return clientType; }
 
-    public void setClientType(String clientType) {
-        this.clientType = clientType;
-    }
+    public void setClientType(String clientType) { this.clientType = clientType; }
+
 }

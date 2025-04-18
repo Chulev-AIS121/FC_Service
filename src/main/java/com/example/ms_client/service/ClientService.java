@@ -2,7 +2,9 @@ package com.example.ms_client.service;
 
 import com.example.ms_client.dto.ClientDTO;
 import com.example.ms_client.entity.Client;
+import com.example.ms_client.exception.ClientNotActiveException;
 import com.example.ms_client.exception.ClientNotFoundException;
+import com.example.ms_client.exception.InvalidClientDataException;
 import com.example.ms_client.mapper.ClientMapper;
 import com.example.ms_client.repository.ClientRepository;
 import jakarta.transaction.Transactional;
@@ -25,20 +27,34 @@ public class ClientService {
         this.mapper = mapper;
     }
 
-
     @Transactional
     public ClientDTO createClient(ClientDTO dto) {
-        Client client = mapper.toEntity(dto); // создаем entity из dto
-        client.setCreateDateTime(LocalDateTime.now()); // устанавливаем дату создания
-        client.setUpdateDateTime(LocalDateTime.now()); // устанавливаем дату обновления
-        return mapper.toDto(repository.save(client)); // сохраняем entity и возвращаем dto
+        if (repository.existsByInn(dto.getInn())) {
+            throw new InvalidClientDataException("Клиент с ИНН %s уже существует".formatted(dto.getInn()));
+        }
+
+        Client client = mapper.toEntity(dto);
+        client.setId(UUID.randomUUID());
+        client.setCreateDateTime(LocalDateTime.now());
+        client.setUpdateDateTime(LocalDateTime.now());
+        return mapper.toDto(repository.save(client));
     }
 
+    public List<ClientDTO> getClients(Boolean active, Pageable pageable) {
+        if (active == null) {
+            return getAllClients(pageable);
+        } else {
+            return getClientsByActiveStatus(active, pageable);
+        }
+    }
 
     @Transactional
     public ClientDTO updateClient(UUID id, ClientDTO dto) {
         return repository.findById(id)
                 .map(existing -> {
+                    if (!existing.isActive()) {
+                        throw new ClientNotActiveException(id);
+                    }
                     mapper.updateClientFromDto(dto, existing);
                     existing.setUpdateDateTime(LocalDateTime.now());
                     return mapper.toDto(repository.save(existing));
@@ -47,9 +63,14 @@ public class ClientService {
     }
 
     public ClientDTO getClientById(UUID id) {
-        return repository.findById(id)
-                .map(mapper::toDto)
+        Client client = repository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
+
+        if (!client.isActive()) {
+            throw new ClientNotActiveException(id);
+        }
+
+        return mapper.toDto(client);
     }
 
     public List<ClientDTO> getAllClients(Pageable pageable) {
@@ -64,11 +85,23 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+    public List<ClientDTO> searchClientsByQuerySymbol(String querySymbol, Pageable pageable) {
+        return repository
+                .findByFullNameContainingIgnoreCaseOrShortNameContainingIgnoreCase(querySymbol, querySymbol, pageable)
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void deleteClient(UUID id) {
         if (!repository.existsById(id)) {
             throw new ClientNotFoundException(id);
         }
         repository.deleteById(id);
+    }
+
+    public void deleteAllClients() {
+        repository.deleteAll();
     }
 }
