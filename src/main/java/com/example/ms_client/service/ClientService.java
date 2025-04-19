@@ -87,7 +87,7 @@ public class ClientService {
 
     public List<ClientDTO> searchClientsByQuerySymbol(String querySymbol, Pageable pageable) {
         return repository
-                .findByFullNameContainingIgnoreCaseOrShortNameContainingIgnoreCase(querySymbol, querySymbol, pageable)
+                .searchClientsByPrefix(querySymbol, pageable)
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());

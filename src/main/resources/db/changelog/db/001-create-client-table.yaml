@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: client
-            schemaName: ms_client_schema  # Указываем схему
+            schemaName: ms_client_schema
             columns:
               - column:
                   name: id
@@ -53,7 +53,7 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: client_type
-            schemaName: ms_client_schema  # Указываем схему
+            schemaName: ms_client_schema
             columns:
               - column:
                   name: key
@@ -72,7 +72,7 @@ databaseChangeLog:
       changes:
         - insert:
             tableName: client_type
-            schemaName: ms_client_schema  # Указываем схему
+            schemaName: ms_client_schema
             columns:
               - column:
                   name: key
@@ -82,7 +82,7 @@ databaseChangeLog:
                   value: "Индивидуальный предприниматель"
         - insert:
             tableName: client_type
-            schemaName: ms_client_schema  # Указываем схему
+            schemaName: ms_client_schema
             columns:
               - column:
                   name: key
@@ -101,4 +101,68 @@ databaseChangeLog:
             referencedTableName: client_type
             referencedColumnNames: key
             constraintName: fk_client_clientType
-            schemaName: ms_client_schema  # Указываем схему
+            schemaName: ms_client_schema
+
+  - changeSet:
+      id: 5
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_full_name
+            tableName: client
+            schemaName: ms_client_schema
+            columns:
+              - column:
+                  name: full_name
+                  type: varchar(255)
+
+  - changeSet:
+      id: 6
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_short_name
+            tableName: client
+            schemaName: ms_client_schema
+            columns:
+              - column:
+                  name: short_name
+                  type: varchar(50)
+
+  - changeSet:
+      id: 7
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_inn
+            tableName: client
+            schemaName: ms_client_schema
+            columns:
+              - column:
+                  name: inn
+                  type: varchar(20)
+  - changeSet:
+      id: 8
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_active
+            tableName: client
+            schemaName: ms_client_schema
+            columns:
+              - column:
+                  name: active
+                  type: boolean
+
+  - changeSet:
+      id: 9
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_client_type
+            tableName: client
+            schemaName: ms_client_schema
+            columns:
+              - column:
+                  name: client_type
+                  type: varchar(50)
