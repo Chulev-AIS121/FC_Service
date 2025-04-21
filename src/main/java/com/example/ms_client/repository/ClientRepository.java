@@ -27,11 +27,11 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     // Кастомный метод для поиска с использованием ILIKE
     @Query("""
-    SELECT c FROM Client c 
-    WHERE LOWER(c.fullName) LIKE LOWER(CONCAT(:querySymbol, '%')) 
-       OR LOWER(c.shortName) LIKE LOWER(CONCAT(:querySymbol, '%'))
-    """)
-    List<Client> searchClientsByPrefix(@Param("querySymbol") String querySymbol, Pageable pageable);
+SELECT c FROM Client c 
+WHERE LOWER(c.fullName) LIKE LOWER(CONCAT('%', :querySymbol, '%')) 
+   OR LOWER(c.shortName) LIKE LOWER(CONCAT('%', :querySymbol, '%'))
+""")
+    Page<Client> searchClientsByPrefix(@Param("querySymbol") String querySymbol, Pageable pageable);
 
 }
 
