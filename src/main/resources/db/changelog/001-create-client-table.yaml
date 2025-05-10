@@ -1,0 +1,168 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date_time
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date_time
+                  type: timestamp
+                  defaultValueComputed: now()
+              - column:
+                  name: client_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inn
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValue: true
+
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - createTable:
+            tableName: client_type
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: key
+                  type: varchar(50)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: your_name
+      changes:
+        - insert:
+            tableName: client_type
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: key
+                  value: "IP"
+              - column:
+                  name: name
+                  value: "Индивидуальный предприниматель"
+        - insert:
+            tableName: client_type
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: key
+                  value: "UL"
+              - column:
+                  name: name
+                  value: "Юридическое лицо"
+
+  - changeSet:
+      id: 4
+      author: your_name
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: client
+            baseColumnNames: client_type
+            referencedTableName: client_type
+            referencedColumnNames: key
+            constraintName: fk_client_clientType
+            # schemaName: ms_client_schema 
+
+  - changeSet:
+      id: 5
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_full_name
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: full_name
+                  type: varchar(255)
+
+  - changeSet:
+      id: 6
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_short_name
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: short_name
+                  type: varchar(50)
+
+  - changeSet:
+      id: 7
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_inn
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: inn
+                  type: varchar(20)
+  - changeSet:
+      id: 8
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_active
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: active
+                  type: boolean
+
+  - changeSet:
+      id: 9
+      author: your_name
+      changes:
+        - createIndex:
+            indexName: idx_client_client_type
+            tableName: client
+            # schemaName: ms_client_schema 
+            columns:
+              - column:
+                  name: client_type
+                  type: varchar(50)
